@@ -1,1 +1,17 @@
-Get-Mailbox -Identity "usuario@dominio.com" | Select-Object UserPrincipalName, ForwardingAddress, DeliverToMailboxAndForward
+# 1. Ruta del archivo TXT de entrada (un correo o UPN por línea) y el CSV de salida
+$txtInputPath = "C:\ruta\usuarios.txt"
+$csvOutputPath = "C:\ruta\resultado_reenvios.csv"
+
+# 2. Leer el archivo TXT y procesar cada usuario
+Get-Content -Path $txtInputPath | ForEach-Object {
+    # Eliminamos espacios en blanco innecesarios
+    $user = $_.Trim()
+    
+    if ($user) {
+        # Ejecutar Get-Mailbox para el usuario actual
+        Get-Mailbox -Identity $user -ErrorAction SilentlyContinue | 
+        Select-Object UserPrincipalName, ForwardingAddress, ForwardingSmtpAddress, DeliverToMailboxAndForward
+    }
+} | Export-Csv -Path $csvOutputPath -NoTypeInformation -Encoding UTF8
+
+Write-Host "Proceso completado. Archivo CSV generado en: $csvOutputPath" -ForegroundColor Green
