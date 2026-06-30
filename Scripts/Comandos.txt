@@ -15,3 +15,17 @@ Get-Content -Path $txtInputPath | ForEach-Object {
 } | Export-Csv -Path $csvOutputPath -NoTypeInformation -Encoding UTF8
 
 Write-Host "Proceso completado. Archivo CSV generado en: $csvOutputPath" -ForegroundColor Green
+
+
+-----------------------
+
+En C:\Users\jhjara\Downloads\PS\SMTP-eliminar.ps1: 149 Carácter: 48
++ ... ption.Message -match "couldn't be found|no se encontrÃ³|not found") {
++                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Falta la cadena en el terminador: '.
+En C:\Users\jhjara\Downloads\PS\SMTP-eliminar.ps1: 79 Carácter: 15
++ if ($Simular) {
++               ~
+Falta la llave de cierre "}" en el bloque de instrucciones o la definición de tipo.
+    + CategoryInfo          : ParserError: (:) [], ParseException
+    + FullyQualifiedErrorId : TerminatorExpectedAtEndOfString
