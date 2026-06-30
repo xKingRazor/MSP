@@ -1,35 +1,34 @@
 <#
 .SYNOPSIS
-    Deshabilita el reenvío SMTP a nivel de buzón en Exchange Online para un listado de usuarios.
+    Deshabilita el reenvio SMTP a nivel de buzon en Exchange Online para un listado de usuarios.
 
 .DESCRIPTION
-    Lee un listado de usuarios (TXT o CSV) y, por cada uno, limpia las propiedades de reenvío
-    del buzón: ForwardingAddress, ForwardingSmtpAddress y DeliverToMailboxAndForward.
+    Lee un listado de usuarios (TXT o CSV) y, por cada uno, limpia las propiedades de reenvio
+    del buzon: ForwardingAddress, ForwardingSmtpAddress y DeliverToMailboxAndForward.
 
-    Incluye modo de simulación (-Simular) y registro de auditoría en CSV con códigos de estado.
+    Incluye modo de simulacion (-Simular) y registro de auditoria en CSV con codigos de estado.
 
-    NOTA: Este script actúa sobre el reenvío configurado a nivel de BUZÓN (Set-Mailbox).
-    No toca las reglas de bandeja de entrada (Inbox Rules), que son otro mecanismo de reenvío.
-    Ver la sección de notas al final para detectarlas.
+    NOTA: Este script actua sobre el reenvio configurado a nivel de BUZON (Set-Mailbox).
+    No toca las reglas de bandeja de entrada (Inbox Rules), que son otro mecanismo de reenvio.
 
 .PARAMETER ListaUsuarios
-    Ruta al archivo con el listado de usuarios (TXT con un usuario por línea, o CSV).
+    Ruta al archivo con el listado de usuarios (TXT con un usuario por linea, o CSV).
 
 .PARAMETER Columna
     Nombre de la columna a usar cuando el archivo es CSV. Por defecto "UserPrincipalName".
     Si el archivo es TXT plano, se ignora.
 
 .PARAMETER RutaLog
-    Ruta del CSV de auditoría. Por defecto se genera en el directorio actual con fecha/hora.
+    Ruta del CSV de auditoria. Por defecto se genera en el directorio actual con fecha/hora.
 
 .PARAMETER Simular
-    Si se especifica, no aplica cambios; solo registra qué haría (estado SIMULADO).
+    Si se especifica, no aplica cambios; solo registra que haria (estado SIMULADO).
 
 .EXAMPLE
-    .\Deshabilitar-ReenvioSMTP.ps1 -ListaUsuarios .\usuarios.txt -Simular
+    .\SMTP-eliminar.ps1 -ListaUsuarios .\usuarios.txt -Simular
 
 .EXAMPLE
-    .\Deshabilitar-ReenvioSMTP.ps1 -ListaUsuarios .\usuarios.csv -Columna "Correo"
+    .\SMTP-eliminar.ps1 -ListaUsuarios .\usuarios.csv -Columna "Correo"
 #>
 
 [CmdletBinding()]
@@ -49,7 +48,7 @@ param(
 
 # --- Validaciones iniciales ---
 if (-not (Test-Path -Path $ListaUsuarios)) {
-    Write-Error "No se encontró el archivo de listado: $ListaUsuarios"
+    Write-Error "No se encontro el archivo de listado: $ListaUsuarios"
     return
 }
 
@@ -66,23 +65,23 @@ if ($extension -eq ".csv") {
     $usuarios = $csv | ForEach-Object { $_.$Columna } | Where-Object { $_ -and $_.Trim() -ne "" }
 }
 else {
-    # TXT plano: un usuario por línea
+    # TXT plano: un usuario por linea
     $usuarios = Get-Content -Path $ListaUsuarios | Where-Object { $_ -and $_.Trim() -ne "" } | ForEach-Object { $_.Trim() }
 }
 
 if ($usuarios.Count -eq 0) {
-    Write-Error "El listado no contiene usuarios válidos."
+    Write-Error "El listado no contiene usuarios validos."
     return
 }
 
 Write-Host "Usuarios a procesar: $($usuarios.Count)" -ForegroundColor Cyan
 if ($Simular) {
-    Write-Host "MODO SIMULACIÓN ACTIVO: no se aplicarán cambios." -ForegroundColor Yellow
+    Write-Host "MODO SIMULACION ACTIVO: no se aplicaran cambios." -ForegroundColor Yellow
 }
 
-# --- Conexión a Exchange Online ---
+# --- Conexion a Exchange Online ---
 if (-not (Get-Module -ListAvailable -Name ExchangeOnlineManagement)) {
-    Write-Error "Falta el módulo ExchangeOnlineManagement. Instálalo con: Install-Module ExchangeOnlineManagement -Scope CurrentUser"
+    Write-Error "Falta el modulo ExchangeOnlineManagement. Instalalo con: Install-Module ExchangeOnlineManagement -Scope CurrentUser"
     return
 }
 
@@ -103,22 +102,22 @@ $contador = 0
 
 foreach ($usuario in $usuarios) {
     $contador++
-    Write-Progress -Activity "Deshabilitando reenvío SMTP" -Status "$contador de $($usuarios.Count): $usuario" -PercentComplete (($contador / $usuarios.Count) * 100)
+    Write-Progress -Activity "Deshabilitando reenvio SMTP" -Status "$contador de $($usuarios.Count): $usuario" -PercentComplete (($contador / $usuarios.Count) * 100)
 
     $registro = [PSCustomObject]@{
-        Usuario              = $usuario
-        ForwardingAddress    = ""
+        Usuario               = $usuario
+        ForwardingAddress     = ""
         ForwardingSmtpAddress = ""
-        DeliverAndForward    = ""
-        Estado               = ""
-        Detalle              = ""
-        FechaHora            = (Get-Date -Format "yyyy-MM-dd HH:mm:ss")
+        DeliverAndForward     = ""
+        Estado                = ""
+        Detalle               = ""
+        FechaHora             = (Get-Date -Format "yyyy-MM-dd HH:mm:ss")
     }
 
     try {
         $mbx = Get-Mailbox -Identity $usuario -ErrorAction Stop
 
-        # Capturar el estado actual del reenvío (para el log)
+        # Capturar el estado actual del reenvio (para el log)
         $registro.ForwardingAddress     = $mbx.ForwardingAddress
         $registro.ForwardingSmtpAddress = $mbx.ForwardingSmtpAddress
         $registro.DeliverAndForward     = $mbx.DeliverToMailboxAndForward
@@ -128,11 +127,11 @@ foreach ($usuario in $usuarios) {
 
         if (-not $tieneReenvio) {
             $registro.Estado  = "SIN REENVIO"
-            $registro.Detalle = "El buzón no tiene reenvío configurado a nivel de buzón."
+            $registro.Detalle = "El buzon no tiene reenvio configurado a nivel de buzon."
         }
         elseif ($Simular) {
             $registro.Estado  = "SIMULADO"
-            $registro.Detalle = "Se limpiaría el reenvío SMTP (modo simulación)."
+            $registro.Detalle = "Se limpiaria el reenvio SMTP (modo simulacion)."
         }
         else {
             Set-Mailbox -Identity $usuario `
@@ -142,13 +141,13 @@ foreach ($usuario in $usuarios) {
                         -ErrorAction Stop
 
             $registro.Estado  = "DESHABILITADO"
-            $registro.Detalle = "Reenvío SMTP eliminado correctamente."
+            $registro.Detalle = "Reenvio SMTP eliminado correctamente."
         }
     }
     catch {
-        if ($_.Exception.Message -match "couldn't be found|no se encontró|not found") {
+        if ($_.Exception.Message -match "be found|not found") {
             $registro.Estado  = "NO ENCONTRADO"
-            $registro.Detalle = "No existe un buzón para este usuario."
+            $registro.Detalle = "No existe un buzon para este usuario."
         }
         else {
             $registro.Estado  = "ERROR"
@@ -156,7 +155,7 @@ foreach ($usuario in $usuarios) {
         }
     }
 
-    # Salida en consola con color según estado
+    # Salida en consola con color segun estado
     $color = switch ($registro.Estado) {
         "DESHABILITADO" { "Green" }
         "SIMULADO"      { "Yellow" }
@@ -173,7 +172,7 @@ foreach ($usuario in $usuarios) {
 # --- Exportar log ---
 try {
     $resultados | Export-Csv -Path $RutaLog -NoTypeInformation -Encoding UTF8
-    Write-Host "`nLog de auditoría generado en: $RutaLog" -ForegroundColor Cyan
+    Write-Host "`nLog de auditoria generado en: $RutaLog" -ForegroundColor Cyan
 }
 catch {
     Write-Warning "No se pudo escribir el log en $RutaLog : $($_.Exception.Message)"
@@ -185,6 +184,6 @@ $resultados | Group-Object Estado | Sort-Object Name | ForEach-Object {
     Write-Host ("{0,-15}: {1}" -f $_.Name, $_.Count)
 }
 
-# --- Desconexión ---
+# --- Desconexion ---
 Disconnect-ExchangeOnline -Confirm:$false -ErrorAction SilentlyContinue
 Write-Host "`nDesconectado de Exchange Online." -ForegroundColor Green
