@@ -29,3 +29,58 @@ En C:\Users\jhjara\Downloads\PS\SMTP-eliminar.ps1: 79 Carácter: 15
 Falta la llave de cierre "}" en el bloque de instrucciones o la definición de tipo.
     + CategoryInfo          : ParserError: (:) [], ParseException
     + FullyQualifiedErrorId : TerminatorExpectedAtEndOfString
+
+----------------------------
+
+No se pudo entregar a estos destinatarios o grupos:
+
+ingrid.n.mow@banistmo.com (ingrid.n.mow@banistmo.com)
+No se ha encontrado la dirección de correo electrónico que ha escrito. Compruebe la dirección de correo electrónico del destinatario e intente reenviar el mensaje. Si el problema persiste, póngase en contacto con el administrador de correo electrónico.
+
+
+
+
+
+
+
+
+Información de diagnóstico para los administradores:
+
+Generando servidor: SBMDEBPEXC12V.bancolombia.corp
+ingrid.n.mow@banistmo.com
+Remote Server returned '550 5.1.10 RESOLVER.ADR.RecipientNotFound; Recipient not found by SMTP address lookup'
+Encabezados de mensajes originales:
+
+Received: from SBMDEBPEXC13V.bancolombia.corp (10.8.42.33) by
+ SBMDEBPEXC12V.bancolombia.corp (10.8.42.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.41; Tue, 30 Jun 2026 13:49:18 -0500
+Received: from BL0PR07CU001.outbound.protection.outlook.com (10.8.42.6) by
+ SBMDEBPEXC13V.bancolombia.corp (10.8.42.33) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.41 via Frontend Transport; Tue, 30 Jun 2026 13:49:17 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LLZ0vC/ly3fY07LOsdi9v1wEWG1FkwiDqtjBQ5aTHwG2XoH74yorn2f3B4CW195mZ90R26K1dBqVxPX7+LjWXsk6tatMHbuu1926fyASuymOwbvit1mgQcPgmqSj+SuY2voOBTslBY6igRooHnVoUEE6SwxlR/0AxCTW/1wqtjfed6AbfPJPhQIbN15+ZgCwHsfR05WAU4gRdAFEPEEWj0kDxXgoQGmIKd0kQPOGWXpwNM32NCqLBdHOxzjEtUbY4Ld4jYP45KVI7Id5x/7vneIVPMng7IVIU3IsOfVKyJNgzsvwFmZlBaCdGwJJZUI2dTFqUB/WGWKuTvWAcFDr/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hBS8UKLglTGiHKGyUtmJcwQaEwig0dSSY66q05bdcds=;
+ b=FpeV3tCtvN1b5C4B7suO5aBlES8twCml9IIJ5Sux/K0oE/Plo2Aw/18eA8NVKjqWwm/TdRNAz1DaxHabxyBe+bVxD3DQTUekzfrd1fnqWZC9nXxeQioFNDH5ShqJ3QebJHWNLtSlMjfNyxvZVW887S2Wv2Bpb0M+/h4rD2aU6hYOOLLPLuAhE83sdfj5nLePp303vxc5MLqN4mAox/5bjIZn4Ih7Pv4j3uc4Kbhm18U/0ydf5g7AQUEuXlc5moSMfq2ZALzdwflZbyGBxL6cC/BHrTYWpIGuswr/4F5r47+BPYOYjSJBaeRYQu5vk3Wudt92675BnZ70SiJqM7XbeA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bancolombia.com.co; dmarc=pass action=none
+ header.from=bancolombia.com.co; dkim=pass header.d=bancolombia.com.co;
+ arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bancolombia.com.co;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hBS8UKLglTGiHKGyUtmJcwQaEwig0dSSY66q05bdcds=;
+ b=HQYfIzfWdSkPEZ461L1wNXLQsVNv/gwTL8RD8h1B01+IPS7BBd1PGPbRFWrebnCCT+h25VVTc/d8BZpXDxC/A5fHNLGjoFL8cUq+EqHRFpoeRfBig0F+sLtE4E9e2Q/f6c8fBRMbSQt7GeGgKphI55ugxD7S/ONMHfAPFR/MFxW/kccXBJSG5JbT8mHLlUZnEIkhqDu6dfAshbFPALq9dMQP8aMAyaJhMVzoeN05CizQnFDPvN+XsE0PiG1f72Jz5p8xSeF67aygQpQKTRDC2i6i1cgcs/QJGGZI106rX107XwBATRdjvIatPDNYtrpy1WVPJ7fxHu2WGI09m/BmMQ==
+Received: from SN1PR02MB3887.namprd02.prod.outlook.com (2603:10b6:802:30::26)
+ by DS0PR02MB11037.namprd02.prod.outlook.com (2603:10b6:8:28f::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.8; Tue, 30 Jun
+ 2026 18:49:06 +0000
+Received: from SN1PR02MB3887.namprd02.prod.outlook.com
+ ([fe80::2486:d60f:1856:788c]) by SN1PR02MB3887.namprd02.prod.outlook.com
+ ([fe80::2486:d60f:1856:788c%5]) with mapi id 15.21.0159.018; Tue, 30 Jun 2026
+ 18:49:06 +0000
